@@ -1,0 +1,196 @@
+@import "tailwindcss";
+
+/* ===========================
+   Luxury Theme Variables
+=========================== */
+
+:root {
+  --background: #f8f5f2;
+  --foreground: #1a1a1a;
+
+  --gold: #c7a463;
+  --cream: #f8f5f2;
+  --charcoal: #1a1a1a;
+  --grey: #6b6b6b;
+  --white: #ffffff;
+
+  --radius: 18px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+
+  font-family: var(--font-body), sans-serif;
+
+  overflow-x: hidden;
+}
+
+/* ===========================
+   Typography
+=========================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading), serif;
+}
+
+p {
+  color: #555;
+  line-height: 1.8;
+}
+
+/* ===========================
+   Links
+=========================== */
+
+a {
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  color: var(--gold);
+}
+
+/* ===========================
+   Buttons
+=========================== */
+
+.btn-primary {
+  background: var(--gold);
+  color: white;
+  padding: 14px 36px;
+  border-radius: 9999px;
+  transition: 0.35s;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background: #000;
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  border: 1px solid white;
+  color: white;
+  padding: 14px 36px;
+  border-radius: 9999px;
+  transition: 0.35s;
+}
+
+.btn-outline:hover {
+  background: white;
+  color: black;
+}
+
+/* ===========================
+   Images
+=========================== */
+
+img {
+  transition: 0.5s ease;
+}
+
+img:hover {
+  transform: scale(1.02);
+}
+
+/* ===========================
+   Sections
+=========================== */
+
+section {
+  position: relative;
+}
+
+/* ===========================
+   Scrollbar
+=========================== */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eee;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 30px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9b7d45;
+}
+
+/* ===========================
+   Selection
+=========================== */
+
+::selection {
+  background: var(--gold);
+  color: white;
+}
+
+/* ===========================
+   Animations
+=========================== */
+
+.fade-up {
+  animation: fadeUp 0.8s ease forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.zoom {
+  animation: zoom 1s ease;
+}
+
+@keyframes zoom {
+  from {
+    transform: scale(1.08);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+/* ===========================
+   Utility Classes
+=========================== */
+
+.gold-text {
+  color: var(--gold);
+}
+
+.bg-cream {
+  background: var(--cream);
+}
+
+.shadow-luxury {
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+}
+
+.rounded-luxury {
+  border-radius: var(--radius);
+}
