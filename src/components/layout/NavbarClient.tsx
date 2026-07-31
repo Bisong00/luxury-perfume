@@ -9,7 +9,17 @@ import CartButton from "@/components/cart/CartButton";
 import CartDrawer from "@/components/cart/CartDrawer";
 import { useCartUIStore } from "@/store/cart-ui.store";
 
-const links = [
+type NavLink =
+  | {
+      name: string;
+      href: string;
+    }
+  | {
+      name: string;
+      section: string;
+    };
+
+const links: NavLink[] = [
   { name: "Home", href: "/" },
   { name: "Shop", href: "/shop" },
   { name: "Collections", section: "collection" },
@@ -66,6 +76,7 @@ export default function NavbarClient() {
 
     sections.forEach((id) => {
       const section = document.getElementById(id);
+
       if (section) observer.observe(section);
     });
 
@@ -76,16 +87,20 @@ export default function NavbarClient() {
     <>
       {/* Desktop Navigation */}
       <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-        {links.map((link) =>
-          "href" in link ? (
-            <Link
-              key={link.name}
-              href={link.href}
-              className="transition hover:text-[#B88A44]"
-            >
-              {link.name}
-            </Link>
-          ) : (
+        {links.map((link) => {
+          if ("href" in link) {
+            return (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="transition hover:text-[#B88A44]"
+              >
+                {link.name}
+              </Link>
+            );
+          }
+
+          return (
             <button
               key={link.name}
               onClick={() => scrollToSection(link.section)}
@@ -97,8 +112,8 @@ export default function NavbarClient() {
             >
               {link.name}
             </button>
-          )
-        )}
+          );
+        })}
 
         <CartButton onClick={openCart} />
       </nav>
@@ -115,19 +130,22 @@ export default function NavbarClient() {
       {/* Mobile Menu */}
       {mobileOpen && (
         <div className="absolute top-full left-0 w-full bg-white border-t shadow-xl md:hidden">
-          <div className="flex flex-col p-6 gap-6">
+          <div className="flex flex-col gap-6 p-6">
+            {links.map((link) => {
+              if ("href" in link) {
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="text-lg"
+                  >
+                    {link.name}
+                  </Link>
+                );
+              }
 
-            {links.map((link) =>
-              "href" in link ? (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="text-lg"
-                >
-                  {link.name}
-                </Link>
-              ) : (
+              return (
                 <button
                   key={link.name}
                   onClick={() => scrollToSection(link.section)}
@@ -135,17 +153,13 @@ export default function NavbarClient() {
                 >
                   {link.name}
                 </button>
-              )
-            )}
-
+              );
+            })}
           </div>
         </div>
       )}
 
-      <CartDrawer
-        open={open}
-        onClose={closeCart}
-      />
+      <CartDrawer open={open} onClose={closeCart} />
     </>
   );
 }
