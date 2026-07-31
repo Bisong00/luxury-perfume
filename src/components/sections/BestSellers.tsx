@@ -33,26 +33,26 @@ const products = [
 
 export default function BestSellers() {
   return (
-    <section className="bg-[#f8f5f2] py-32">
+    <section className="bg-[#f8f5f2] py-16 sm:py-20 lg:py-28">
 
-      <div className="mx-auto max-w-7xl px-6">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
 
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="mb-20 text-center"
+          className="mb-12 text-center sm:mb-16 lg:mb-20"
         >
-          <p className="uppercase tracking-[0.45em] text-[#C7A463]">
+          <p className="text-xs uppercase tracking-[0.3em] text-[#C7A463] sm:text-sm sm:tracking-[0.45em]">
             Best Sellers
           </p>
 
-          <h2 className="mt-5 text-6xl font-light">
+          <h2 className="mt-4 font-[family-name:var(--font-heading)] text-3xl font-light sm:text-4xl lg:mt-5 lg:text-6xl">
             Signature Collection
           </h2>
         </motion.div>
 
-        <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
 
           {products.map((product, index) => (
 
@@ -60,7 +60,7 @@ export default function BestSellers() {
               key={product.id}
               initial={{
                 opacity: 0,
-                y: 80,
+                y: 60,
               }}
               whileInView={{
                 opacity: 1,
@@ -70,31 +70,34 @@ export default function BestSellers() {
                 delay: index * 0.15,
               }}
               viewport={{ once: true }}
-              className="group overflow-hidden rounded-[30px] bg-white shadow-xl"
+              className="group overflow-hidden rounded-[30px] bg-white shadow-xl transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
             >
 
-              <div className="relative h-[420px] overflow-hidden">
+              <div className="relative aspect-[3/4] overflow-hidden">
 
                 <Image
                   src={product.image}
                   alt={product.name}
                   fill
-                  className="object-cover duration-700 group-hover:scale-110"
+                  sizes="(max-width:640px) 100vw,
+                         (max-width:1024px) 50vw,
+                         25vw"
+                  className="object-cover transition duration-700 group-hover:scale-110"
                 />
 
                 <div className="absolute inset-0 bg-black/20 opacity-0 transition group-hover:opacity-100" />
 
-                <button className="absolute bottom-6 left-1/2 -translate-x-1/2 translate-y-10 rounded-full bg-white px-8 py-3 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+                <button className="absolute bottom-5 left-1/2 hidden -translate-x-1/2 translate-y-10 rounded-full bg-white px-6 py-3 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 lg:block">
                   Quick View
                 </button>
 
               </div>
 
-              <div className="p-8">
+              <div className="p-5 sm:p-6 lg:p-8">
 
-                <div className="mb-4 flex">
+                <div className="mb-3 flex">
 
-                  {[1,2,3,4,5].map((star)=>(
+                  {[1, 2, 3, 4, 5].map((star) => (
                     <Star
                       key={star}
                       size={16}
@@ -105,15 +108,15 @@ export default function BestSellers() {
 
                 </div>
 
-                <h3 className="mb-2 text-2xl font-light">
+                <h3 className="mb-2 text-xl font-light sm:text-2xl">
                   {product.name}
                 </h3>
 
-                <p className="mb-8 text-lg font-semibold text-[#C7A463]">
+                <p className="mb-6 text-lg font-semibold text-[#C7A463]">
                   {product.price}
                 </p>
 
-                <button className="flex w-full items-center justify-center gap-3 rounded-full border py-4 transition hover:bg-black hover:text-white">
+                <button className="flex w-full items-center justify-center gap-3 rounded-full border py-3 transition hover:bg-black hover:text-white">
                   <ShoppingBag size={18} />
                   Add to Cart
                 </button>

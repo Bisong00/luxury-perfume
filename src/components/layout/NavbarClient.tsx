@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Menu, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 import CartButton from "@/components/cart/CartButton";
@@ -9,26 +10,11 @@ import CartDrawer from "@/components/cart/CartDrawer";
 import { useCartUIStore } from "@/store/cart-ui.store";
 
 const links = [
-  {
-    name: "Home",
-    href: "/",
-  },
-  {
-    name: "Shop",
-    href: "/shop",
-  },
-  {
-    name: "Collections",
-    section: "collection",
-  },
-  {
-    name: "About",
-    section: "about",
-  },
-  {
-    name: "Contact",
-    section: "contact",
-  },
+  { name: "Home", href: "/" },
+  { name: "Shop", href: "/shop" },
+  { name: "Collections", section: "collection" },
+  { name: "About", section: "about" },
+  { name: "Contact", section: "contact" },
 ];
 
 export default function NavbarClient() {
@@ -36,12 +22,15 @@ export default function NavbarClient() {
   const router = useRouter();
 
   const [activeSection, setActiveSection] = useState("");
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const open = useCartUIStore((state) => state.open);
   const openCart = useCartUIStore((state) => state.openCart);
   const closeCart = useCartUIStore((state) => state.closeCart);
 
   const scrollToSection = (sectionId: string) => {
+    setMobileOpen(false);
+
     if (pathname !== "/") {
       router.push(`/#${sectionId}`);
       return;
@@ -49,12 +38,12 @@ export default function NavbarClient() {
 
     const section = document.getElementById(sectionId);
 
-    if (!section) return;
-
-    section.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    if (section) {
+      section.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
   };
 
   useEffect(() => {
@@ -77,10 +66,7 @@ export default function NavbarClient() {
 
     sections.forEach((id) => {
       const section = document.getElementById(id);
-
-      if (section) {
-        observer.observe(section);
-      }
+      if (section) observer.observe(section);
     });
 
     return () => observer.disconnect();
@@ -88,20 +74,13 @@ export default function NavbarClient() {
 
   return (
     <>
-      <nav
-        className="
-          flex
-          items-center
-          gap-8
-          text-sm
-          font-medium
-        "
-      >
+      {/* Desktop Navigation */}
+      <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
         {links.map((link) =>
           "href" in link ? (
             <Link
               key={link.name}
-              href={link.href ?? "/"}
+              href={link.href}
               className="transition hover:text-[#B88A44]"
             >
               {link.name}
@@ -109,18 +88,12 @@ export default function NavbarClient() {
           ) : (
             <button
               key={link.name}
-              type="button"
               onClick={() => scrollToSection(link.section)}
-              className={`
-                cursor-pointer
-                transition
-                hover:text-[#B88A44]
-                ${
-                  activeSection === link.section
-                    ? "text-[#B88A44] font-semibold"
-                    : ""
-                }
-              `}
+              className={`transition hover:text-[#B88A44] ${
+                activeSection === link.section
+                  ? "text-[#B88A44] font-semibold"
+                  : ""
+              }`}
             >
               {link.name}
             </button>
@@ -129,6 +102,45 @@ export default function NavbarClient() {
 
         <CartButton onClick={openCart} />
       </nav>
+
+      {/* Mobile Controls */}
+      <div className="flex md:hidden items-center gap-4">
+        <CartButton onClick={openCart} />
+
+        <button onClick={() => setMobileOpen(!mobileOpen)}>
+          {mobileOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      {mobileOpen && (
+        <div className="absolute top-full left-0 w-full bg-white border-t shadow-xl md:hidden">
+          <div className="flex flex-col p-6 gap-6">
+
+            {links.map((link) =>
+              "href" in link ? (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="text-lg"
+                >
+                  {link.name}
+                </Link>
+              ) : (
+                <button
+                  key={link.name}
+                  onClick={() => scrollToSection(link.section)}
+                  className="text-left text-lg"
+                >
+                  {link.name}
+                </button>
+              )
+            )}
+
+          </div>
+        </div>
+      )}
 
       <CartDrawer
         open={open}
