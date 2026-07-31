@@ -141,6 +141,8 @@ model Order {
   status OrderStatus @default(PENDING)
 
   paymentId String?
+  razorpayOrderId   String?
+  razorpayPaymentId  String?
 
   paymentStatus String @default("pending")
 
@@ -179,12 +181,9 @@ enum Role {
 
 enum OrderStatus {
   PENDING
-
+  PAID
   PROCESSING
-
   SHIPPED
-
   DELIVERED
-
   CANCELLED
 }

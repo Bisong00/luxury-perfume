@@ -8,7 +8,7 @@ import {
 
 
 interface Category {
-  id: string;
+ id: string | number;
   name: string;
   slug: string;
 }

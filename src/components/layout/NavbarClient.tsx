@@ -101,7 +101,7 @@ export default function NavbarClient() {
           "href" in link ? (
             <Link
               key={link.name}
-              href={link.href}
+              href={link.href ?? "/"}
               className="transition hover:text-[#B88A44]"
             >
               {link.name}

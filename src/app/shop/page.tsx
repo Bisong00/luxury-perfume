@@ -6,6 +6,12 @@ import {
   getAllProducts,
 } from "@/services/product.service";
 
+interface ProductImage {
+  id: string;
+  url: string;
+  alt: string | null;
+}
+
 
 interface SearchParams {
   search?: string;
@@ -15,6 +21,7 @@ interface SearchParams {
   maxPrice?: string;
   sort?: string;
 }
+
 
 
 export default async function ShopPage({
@@ -50,9 +57,9 @@ export default async function ShopPage({
 
       images:
         product.images.map(
-          (image) => ({
-            ...image,
-          })
+           (image: ProductImage) => ({
+              ...image,
+           })
         ),
 
       brand: {

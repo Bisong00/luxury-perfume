@@ -209,7 +209,7 @@ export async function POST(
 
 
                 status:
-                "paid",
+                "PAID",
 
 
 
