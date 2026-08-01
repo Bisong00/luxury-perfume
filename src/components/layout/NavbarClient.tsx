@@ -10,19 +10,7 @@ import CartDrawer from "@/components/cart/CartDrawer";
 import { useCartUIStore } from "@/store/cart-ui.store";
 
 
-interface NavbarClientProps {
-  mobileAuth: React.ReactNode;
-}
-
-
-interface NavLink {
-  name: string;
-  href?: string;
-  section?: string;
-}
-
-
-const links: NavLink[] = [
+const links = [
   {
     name: "Home",
     href: "/",
@@ -46,6 +34,12 @@ const links: NavLink[] = [
 ];
 
 
+interface NavbarClientProps {
+  mobileAuth: React.ReactNode;
+}
+
+
+
 export default function NavbarClient({
   mobileAuth,
 }: NavbarClientProps) {
@@ -55,33 +49,42 @@ export default function NavbarClient({
   const router = useRouter();
 
 
-  const [activeSection, setActiveSection] = useState("");
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeSection,setActiveSection] = useState("");
+  const [mobileOpen,setMobileOpen] = useState(false);
 
 
 
-  const open = useCartUIStore(
-    (state) => state.open
-  );
+  const open =
+    useCartUIStore(
+      (state)=>state.open
+    );
 
-  const openCart = useCartUIStore(
-    (state) => state.openCart
-  );
 
-  const closeCart = useCartUIStore(
-    (state) => state.closeCart
-  );
+  const openCart =
+    useCartUIStore(
+      (state)=>state.openCart
+    );
+
+
+  const closeCart =
+    useCartUIStore(
+      (state)=>state.closeCart
+    );
+
+
 
 
 
   const scrollToSection = (
-    sectionId: string
-  ) => {
+    sectionId:string
+  )=>{
+
 
     setMobileOpen(false);
 
 
-    if (pathname !== "/") {
+
+    if(pathname !== "/"){
 
       router.push(
         `/#${sectionId}`
@@ -91,19 +94,22 @@ export default function NavbarClient({
     }
 
 
+
     const section =
       document.getElementById(
         sectionId
       );
 
 
-    if (!section) return;
 
+    if(section){
 
-    section.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+      section.scrollIntoView({
+        behavior:"smooth",
+        block:"start",
+      });
+
+    }
 
   };
 
@@ -111,29 +117,34 @@ export default function NavbarClient({
 
 
 
-  useEffect(() => {
-
-    if (pathname !== "/") return;
 
 
-    const sections = [
+  useEffect(()=>{
+
+
+    if(pathname !== "/")
+      return;
+
+
+
+    const sections=[
       "collection",
       "about",
-      "contact",
+      "contact"
     ];
 
 
 
     const observer =
       new IntersectionObserver(
-        (entries) => {
+        (entries)=>{
+
 
           entries.forEach(
-            (entry) => {
+            (entry)=>{
 
-              if (
-                entry.isIntersecting
-              ) {
+
+              if(entry.isIntersecting){
 
                 setActiveSection(
                   entry.target.id
@@ -144,280 +155,327 @@ export default function NavbarClient({
             }
           );
 
+
         },
         {
-          threshold: 0.35,
+          threshold:0.35
         }
+
       );
 
 
 
     sections.forEach(
-      (id) => {
+      (id)=>{
+
 
         const section =
           document.getElementById(id);
 
 
-        if (section) {
+
+        if(section){
 
           observer.observe(section);
 
         }
+
 
       }
     );
 
 
 
-    return () =>
-      observer.disconnect();
+    return ()=>observer.disconnect();
 
 
-  }, [pathname]);
 
+  },[pathname]);
 
 
 
 
 
-  return (
-    <>
 
 
-      {/* DESKTOP NAVIGATION */}
+return (
 
-      <nav
-        className="
-          hidden
-          md:flex
-          items-center
-          gap-8
-          text-sm
-          font-medium
-        "
-      >
+<>
 
-        {links.map(
-          (link) =>
+{/* DESKTOP MENU */}
 
-            link.href ? (
+<nav
+className="
+hidden
+md:flex
+items-center
+gap-8
+text-sm
+font-medium
+"
+>
 
-              <Link
-                key={link.name}
-                href={link.href}
-                className="
-                  transition
-                  hover:text-[#B88A44]
-                "
-              >
-                {link.name}
-              </Link>
 
+{
+links.map((link)=>
 
-            ) : (
+"href" in link ? (
 
-              <button
-                key={link.name}
-                type="button"
-                onClick={() =>
-                  scrollToSection(
-                    link.section!
-                  )
-                }
-                className={`
-                  transition
-                  hover:text-[#B88A44]
+<Link
 
-                  ${
-                    activeSection === link.section
-                      ? "font-semibold text-[#B88A44]"
-                      : ""
-                  }
-                `}
-              >
+key={link.name}
 
-                {link.name}
+href={link.href ?? "/"}
 
-              </button>
+className="
+transition
+hover:text-[#B88A44]
+"
 
-            )
+>
 
-        )}
+{link.name}
 
+</Link>
 
 
-        <CartButton
-          onClick={openCart}
-        />
+):(
 
 
-      </nav>
+<button
 
+key={link.name}
 
+onClick={()=>
+scrollToSection(
+link.section ?? ""
+)
+}
 
+className={`
+transition
+hover:text-[#B88A44]
 
+${
+activeSection === link.section
+?
+"text-[#B88A44] font-semibold"
+:
+""
+}
 
+`}
 
+>
 
-      {/* MOBILE CONTROLS */}
+{link.name}
 
-      <div
-        className="
-          flex
-          items-center
-          gap-4
-          md:hidden
-        "
-      >
+</button>
 
-        <CartButton
-          onClick={openCart}
-        />
 
+)
 
-        <button
-          type="button"
-          aria-label="Toggle menu"
-          onClick={() =>
-            setMobileOpen(
-              !mobileOpen
-            )
-          }
-          className="
-            flex
-            h-10
-            w-10
-            items-center
-            justify-center
-            rounded-full
-            border
-          "
-        >
+)
 
-          {
-            mobileOpen
-              ? <X size={24}/>
-              : <Menu size={24}/>
-          }
 
 
-        </button>
+}
 
 
-      </div>
+<CartButton
+onClick={openCart}
+/>
 
 
+</nav>
 
 
 
 
 
+{/* MOBILE ICONS */}
 
-      {/* MOBILE MENU */}
 
-      {
-        mobileOpen && (
+<div
+className="
+flex
+items-center
+gap-4
+md:hidden
+"
+>
 
-          <div
-            className="
-              absolute
-              left-0
-              top-full
-              w-full
-              border-t
-              bg-white
-              shadow-xl
-              md:hidden
-            "
-          >
 
-            <div
-              className="
-                flex
-                flex-col
-                gap-6
-                p-6
-              "
-            >
+<CartButton
+onClick={openCart}
+/>
 
 
 
-              {links.map(
-                (link) =>
+<button
 
-                  link.href ? (
+type="button"
 
-                    <Link
-                      key={link.name}
-                      href={link.href}
-                      onClick={() =>
-                        setMobileOpen(false)
-                      }
-                      className="
-                        text-lg
-                        font-medium
-                        transition
-                        hover:text-[#B88A44]
-                      "
-                    >
-                      {link.name}
-                    </Link>
+aria-label="menu"
 
+onClick={()=>
+setMobileOpen(!mobileOpen)
+}
 
-                  ) : (
+>
 
-                    <button
-                      key={link.name}
-                      type="button"
-                      onClick={() =>
-                        scrollToSection(
-                          link.section!
-                        )
-                      }
-                      className="
-                        text-left
-                        text-lg
-                        font-medium
-                        transition
-                        hover:text-[#B88A44]
-                      "
-                    >
-                      {link.name}
+{
+mobileOpen
+?
+<X size={28}/>
+:
+<Menu size={28}/>
+}
 
-                    </button>
+</button>
 
-                  )
 
-              )}
 
+</div>
 
 
 
-              {/* AUTH SECTION */}
 
-              {mobileAuth}
 
 
 
-            </div>
+{/* MOBILE DROPDOWN */}
 
 
-          </div>
+{
+mobileOpen && (
 
-        )
-      }
 
+<div
 
+className="
+absolute
+left-0
+top-full
+z-50
+w-full
+border-t
+bg-white
+shadow-xl
+md:hidden
+"
 
+>
 
 
-      <CartDrawer
-        open={open}
-        onClose={closeCart}
-      />
+<div
 
+className="
+flex
+flex-col
+gap-6
+p-6
+"
 
-    </>
-  );
+>
+
+
+{
+links.map((link)=>
+
+"href" in link ? (
+
+
+<Link
+
+key={link.name}
+
+href={link.href ?? "/"}
+
+onClick={()=>
+setMobileOpen(false)
+}
+
+className="
+text-lg
+font-medium
+"
+
+>
+
+{link.name}
+
+</Link>
+
+
+
+):(
+
+
+<button
+
+key={link.name}
+
+onClick={()=>
+scrollToSection(
+link.section ?? ""
+)
+}
+
+className="
+text-left
+text-lg
+font-medium
+"
+
+>
+
+{link.name}
+
+</button>
+
+
+)
+
+)
+
+}
+
+
+
+
+{/* LOGIN REGISTER */}
+
+{mobileAuth}
+
+
+
+</div>
+
+
+</div>
+
+
+)
+
+}
+
+
+
+
+
+<CartDrawer
+
+open={open}
+
+onClose={closeCart}
+
+/>
+
+
+</>
+
+);
+
+
 }

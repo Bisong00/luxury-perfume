@@ -5,70 +5,98 @@ import AuthButtons from "./AuthButtons";
 import MobileAuth from "./MobileAuth";
 
 
-export default function Navbar() {
-  return (
-    <header
-      className="
-        sticky
-        top-0
-        z-50
-        w-full
-        border-b
-        border-neutral-200
-        bg-white/90
-        backdrop-blur
-      "
-    >
+export default function Navbar(){
 
-      <div
-        className="
-          mx-auto
-          flex
-          h-16
-          max-w-7xl
-          items-center
-          justify-between
-          px-4
-          sm:px-6
-          lg:px-8
-        "
-      >
+return (
 
-        {/* Logo */}
-        <Link
-          href="/"
-          className="
-            text-xl
-            font-bold
-            tracking-[0.25em]
-          "
-        >
-          LUXE
-        </Link>
+<header
+className="
+sticky
+top-0
+z-50
+w-full
+border-b
+border-neutral-200
+bg-white/90
+backdrop-blur
+"
+>
 
 
-        <div className="flex items-center gap-4">
+<div
+className="
+mx-auto
+flex
+h-16
+max-w-7xl
+items-center
+justify-between
+px-4
+sm:px-6
+lg:px-8
+"
+>
 
 
-          <NavbarClient
-            mobileAuth={
-              <MobileAuth />
-            }
-          />
+<Link
+
+href="/"
+
+className="
+text-xl
+font-bold
+tracking-[0.25em]
+"
+
+>
+
+LUXE
+
+</Link>
 
 
-          {/* Desktop Auth */}
-          <div className="hidden md:flex">
-            <AuthButtons />
-          </div>
+
+<div
+className="
+flex
+items-center
+gap-4
+"
+>
 
 
-        </div>
+<NavbarClient
+
+mobileAuth={
+<MobileAuth/>
+}
+
+/>
 
 
-      </div>
+
+<div
+className="
+hidden
+md:flex
+"
+>
+
+<AuthButtons/>
+
+</div>
 
 
-    </header>
-  );
+
+</div>
+
+
+</div>
+
+
+</header>
+
+);
+
+
 }
