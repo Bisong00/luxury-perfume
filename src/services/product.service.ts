@@ -4,7 +4,26 @@ import { ProductFilters } from "@/types/shop";
 function serializeProduct(product: any) {
   return {
     ...product,
+
     price: Number(product.price),
+
+    brand: {
+      id: product.brand.id,
+      name: product.brand.name,
+      slug: product.brand.slug,
+    },
+
+    category: {
+      id: product.category.id,
+      name: product.category.name,
+      slug: product.category.slug,
+    },
+
+    images: product.images.map((image: any) => ({
+      id: image.id,
+      url: image.url,
+      alt: image.alt,
+    })),
   };
 }
 
@@ -173,24 +192,19 @@ export async function getNewArrivals() {
   return products.map(serializeProduct);
 }
 
-export async function getProductBySlug(
-  slug: string
-) {
-  const product =
-    await prisma.product.findUnique({
-      where: {
-        slug,
-      },
-      include: {
-        brand: true,
-        category: true,
-        images: true,
-      },
-    });
+export async function getProductBySlug(slug: string) {
+  const product = await prisma.product.findUnique({
+    where: {
+      slug,
+    },
+    include: {
+      brand: true,
+      category: true,
+      images: true,
+    },
+  });
 
-  return product
-    ? serializeProduct(product)
-    : null;
+  return product ? serializeProduct(product) : null;
 }
 
 export async function getAllBrands() {
@@ -213,31 +227,28 @@ export async function getRelatedProducts(
   categoryId: string,
   currentProductId: string
 ) {
-  const products =
-    await prisma.product.findMany({
-      where: {
-        categoryId,
-        NOT: {
-          id: currentProductId,
-        },
+  const products = await prisma.product.findMany({
+    where: {
+      categoryId,
+      NOT: {
+        id: currentProductId,
       },
-      include: {
-        brand: true,
-        category: true,
-        images: true,
-      },
-      take: 4,
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    },
+    include: {
+      brand: true,
+      category: true,
+      images: true,
+    },
+    take: 4,
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
   return products.map(serializeProduct);
 }
 
-export async function searchProducts(
-  query: string
-) {
+export async function searchProducts(query: string) {
   return getFilteredProducts({
     search: query,
   });

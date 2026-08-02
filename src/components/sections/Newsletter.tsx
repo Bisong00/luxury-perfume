@@ -1,6 +1,48 @@
 "use client";
 
+import { useState } from "react";
+import { toast } from "sonner";
+
 export default function Newsletter() {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function subscribe() {
+    if (!email) {
+      toast.error("Please enter your email.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.message);
+        return;
+      }
+
+      toast.success("Subscribed successfully!");
+
+      setEmail("");
+    } catch {
+      toast.error("Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <section
       id="contact"
@@ -24,11 +66,17 @@ export default function Newsletter() {
           <input
             type="email"
             placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="flex-1 rounded-full bg-white px-8 py-5 text-black outline-none"
           />
 
-          <button className="btn-primary">
-            Subscribe
+          <button
+            onClick={subscribe}
+            disabled={loading}
+            className="btn-primary disabled:opacity-50"
+          >
+            {loading ? "Subscribing..." : "Subscribe"}
           </button>
         </div>
       </div>

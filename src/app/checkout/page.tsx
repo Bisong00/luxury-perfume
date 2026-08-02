@@ -1,50 +1,229 @@
-import CheckoutForm from "@/components/checkout/CheckoutForm";
+"use client";
+
+import { useState } from "react";
+
+import CheckoutStepper from "@/components/checkout/CheckoutStepper";
+
+import CustomerForm from "@/components/checkout/CustomerForm";
+import ShippingForm from "@/components/checkout/ShippingForm";
+import PaymentForm from "@/components/checkout/PaymentForm";
+import ReviewOrder from "@/components/checkout/ReviewOrder";
+
 import CheckoutSummary from "@/components/checkout/CheckoutSummary";
 
-import { useCartStore } from "@/store/cart.store";
 
 
 export default function CheckoutPage() {
 
+
+  const [step,setStep] =
+  useState(1);
+
+
+
+  const [checkoutData,setCheckoutData] =
+  useState({
+
+    firstName:"",
+    lastName:"",
+    email:"",
+    phone:"",
+
+    address:"",
+    city:"",
+    country:"",
+    postcode:"",
+
+  });
+
+
+
+  function updateData(
+    data:any
+  ){
+
+    setCheckoutData(
+      prev=>({
+        ...prev,
+        ...data,
+      })
+    );
+
+  }
+
+
+
+  function nextStep(){
+
+    setStep(
+      prev =>
+      Math.min(
+        prev + 1,
+        4
+      )
+    );
+
+  }
+
+
+
+  function previousStep(){
+
+    setStep(
+      prev =>
+      Math.max(
+        prev - 1,
+        1
+      )
+    );
+
+  }
+
+
+
+
+
   return (
+
     <main
       className="
-        mx-auto
-        grid
-        max-w-7xl
-        gap-10
-        px-6
+        min-h-screen
+        bg-[#faf9f7]
         py-20
-        lg:grid-cols-2
       "
     >
 
-      <section>
+      <div
+        className="
+          mx-auto
+          max-w-7xl
+          px-6
+        "
+      >
 
-        <h1
+
+        <CheckoutStepper
+          currentStep={step}
+        />
+
+
+
+        <div
           className="
-            mb-8
-            text-4xl
-            font-light
+            mt-12
+            grid
+            gap-10
+            lg:grid-cols-[1fr_420px]
           "
         >
-          Checkout
-        </h1>
-
-
-        <CheckoutForm />
-
-      </section>
 
 
 
-      <section>
+          <section
+            className="
+              rounded-3xl
+              bg-white
+              p-10
+            "
+          >
 
-        <CheckoutSummary />
 
-      </section>
+
+            {step === 1 && (
+
+              <CustomerForm
+
+                data={checkoutData}
+
+                updateData={
+                  updateData
+                }
+
+                nextStep={
+                  nextStep
+                }
+
+              />
+
+            )}
+
+
+
+            {step === 2 && (
+
+              <ShippingForm
+
+                data={checkoutData}
+
+                updateData={
+                  updateData
+                }
+
+                previousStep={
+                  previousStep
+                }
+
+                nextStep={
+                  nextStep
+                }
+
+              />
+
+            )}
+
+
+
+
+            {step === 3 && (
+
+              <PaymentForm
+
+                previousStep={
+                  previousStep
+                }
+
+              />
+
+            )}
+
+
+
+
+
+            {step === 4 && (
+
+              <ReviewOrder
+
+                checkoutData={
+                  checkoutData
+                }
+
+                previousStep={
+                  previousStep
+                }
+
+              />
+
+            )}
+
+
+
+          </section>
+
+
+
+
+          <CheckoutSummary />
+
+
+        </div>
+
+
+      </div>
 
 
     </main>
+
   );
+
 }
